@@ -144,7 +144,7 @@ export default function App() {
             position: scene === 'zone' && zone
               ? zone.cameraPosition
               : [0, 20, 30],
-            fov: 55,
+              fov: scene === 'zone' && isMobile ? 75 : 55,
             near: 0.1,
             far: 200,
           }}
@@ -185,7 +185,11 @@ export default function App() {
             dampingFactor={0.05}
             enableDamping
             enabled={!isTourActive}
-            target={scene === 'lobby' && isMobile ? [-4.8, 0, -3] : [0, 0, 0]}
+            target={
+              scene === 'lobby' 
+                ? (isMobile ? [-4.8, 0, -3] : [0, 0, 0])
+                : (zone && scene === 'zone' ? zone.cameraTarget : [0, 0, 0])
+            }
           />
         </Canvas>
       )}
