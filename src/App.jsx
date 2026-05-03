@@ -141,9 +141,9 @@ export default function App() {
       {scene !== 'loading' && (
         <Canvas
           camera={{
-            position: scene === 'zone' && zone
-              ? zone.cameraPosition
-              : [0, 20, 30],
+              position: scene === 'zone' && zone
+                ? (isMobile ? [zone.cameraPosition[0]*1.6, zone.cameraPosition[1]*1.6, zone.cameraPosition[2]*1.6] : zone.cameraPosition)
+                : [0, 20, 30],
               fov: scene === 'zone' && isMobile ? 75 : 55,
             near: 0.1,
             far: 200,
