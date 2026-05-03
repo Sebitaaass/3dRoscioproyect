@@ -24,8 +24,16 @@ export default function App() {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [transitionZone, setTransitionZone] = useState(null);
   const [isTourActive, setIsTourActive] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const cameraControlsRef = useRef();
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // === Handlers ===
   const handleLoadComplete = useCallback(() => {
@@ -172,11 +180,12 @@ export default function App() {
             maxDistance={45}
             minPolarAngle={0.2}
             maxPolarAngle={Math.PI / 2.1}
-            autoRotate={scene === 'lobby'}
+            autoRotate={scene === 'lobby' && !isMobile}
             autoRotateSpeed={0.2} // Much slower rotation for better control
             dampingFactor={0.05}
             enableDamping
             enabled={!isTourActive}
+            target={scene === 'lobby' && isMobile ? [-4.8, 0, -3] : [0, 0, 0]}
           />
         </Canvas>
       )}
