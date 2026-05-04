@@ -8,7 +8,7 @@ import Flora from '../Terrain/Flora';
 import LowPolyTown from '../Terrain/LowPolyTown';
 import { zones } from '../../data/zones';
 
-export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrigger }) {
+export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrigger, isMobile }) {
   const zone = zones[zoneId];
   if (!zone) return null;
 
@@ -30,9 +30,9 @@ export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrig
         position={zoneId === 'morros' ? [12, 15, 8] : [10, 18, 10]}
         intensity={1.8}
         color="#fffaf0"
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
+        castShadow={!isMobile}
+        shadow-mapSize-width={isMobile ? 512 : 1024}
+        shadow-mapSize-height={isMobile ? 512 : 1024}
         shadow-camera-far={60}
         shadow-camera-left={-20}
         shadow-camera-right={20}
@@ -77,6 +77,7 @@ export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrig
           key={hotspot.id}
           hotspot={hotspot}
           onClick={() => onHotspotClick(hotspot)}
+          isMobile={isMobile}
         />
       ))}
 
@@ -85,13 +86,14 @@ export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrig
         <QuizTrigger3D
           position={[-1, 5.5, -2]}
           onClick={onQuizTrigger}
+          isMobile={isMobile}
         />
       )}
     </>
   );
 }
 
-function HotspotMarker3D({ hotspot, onClick }) {
+function HotspotMarker3D({ hotspot, onClick, isMobile }) {
   const groupRef = useRef();
 
   useFrame((state) => {
@@ -110,7 +112,7 @@ function HotspotMarker3D({ hotspot, onClick }) {
       </mesh>
 
       {/* HTML marker */}
-      <Html center distanceFactor={12} zIndexRange={[10, 0]}>
+      <Html center distanceFactor={isMobile ? 18 : 12} zIndexRange={[10, 0]}>
         <div className="hotspot-marker" onClick={onClick} title={hotspot.title}>
           ℹ️
         </div>
@@ -119,7 +121,7 @@ function HotspotMarker3D({ hotspot, onClick }) {
   );
 }
 
-function QuizTrigger3D({ position, onClick }) {
+function QuizTrigger3D({ position, onClick, isMobile }) {
   const groupRef = useRef();
 
   useFrame((state) => {
@@ -146,7 +148,7 @@ function QuizTrigger3D({ position, onClick }) {
         <octahedronGeometry args={[0.4, 0]} />
         <meshBasicMaterial color="#f97316" transparent opacity={0.08} wireframe />
       </mesh>
-      <Html center distanceFactor={12} zIndexRange={[10, 0]}>
+      <Html center distanceFactor={isMobile ? 18 : 12} zIndexRange={[10, 0]}>
         <div className="quiz-trigger" onClick={onClick} title="Desafío de Pariapán">
           🎮
         </div>

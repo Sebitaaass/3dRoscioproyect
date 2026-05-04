@@ -132,8 +132,8 @@ export default function App() {
             far: 200,
           }}
           style={{ position: 'fixed', inset: 0 }}
-          dpr={[1, 1.5]}
-          gl={{ antialias: true, alpha: false }}
+          dpr={isMobile ? Math.min(window.devicePixelRatio, 1.5) : [1, 2]}
+          gl={{ antialias: !isMobile, alpha: false, powerPreference: 'high-performance' }}
           onCreated={({ gl }) => {
             gl.setClearColor('#0f172a');
           }}
@@ -149,6 +149,7 @@ export default function App() {
                 viewMode={viewMode}
                 onHotspotClick={handleHotspotClick}
                 onQuizTrigger={handleQuizTrigger}
+                isMobile={isMobile}
               />
             )}
           </Suspense>
@@ -163,8 +164,11 @@ export default function App() {
             maxPolarAngle={Math.PI / 2.1}
             autoRotate={scene === 'lobby' && !isMobile}
             autoRotateSpeed={0.2} // Much slower rotation for better control
-            dampingFactor={0.05}
-            enableDamping
+            dampingFactor={isMobile ? 0.08 : 0.05}
+            enableDamping={true}
+            rotateSpeed={isMobile ? 0.6 : 1.0}
+            zoomSpeed={isMobile ? 0.8 : 1.0}
+            panSpeed={isMobile ? 0.5 : 1.0}
             target={
               scene === 'lobby' 
                 ? (isMobile ? [-4.8, 0, -3] : [0, 0, 0])

@@ -27,6 +27,7 @@ html, body, #root {
   width: 100%;
   height: 100dvh; /* Dynamic viewport height fixes mobile browser UI overlap */
   overflow: hidden;
+  position: fixed; /* Previene scroll bounce (rubber-banding) en moviles */
   font-family: 'Outfit', sans-serif;
   background: var(--color-bg-dark);
   color: var(--color-text);
@@ -551,6 +552,17 @@ html, body, #root {
   font-size: 0.9rem;
   box-shadow: 0 0 20px rgba(109, 40, 217, 0.4);
   animation: hotspotPulse 2.5s ease-in-out infinite;
+  position: relative;
+}
+
+/* Área táctil invisible para cumplir con la regla de 44px de Apple/Google */
+.hotspot-marker::after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
 }
 
 .hotspot-marker:hover {
@@ -771,34 +783,45 @@ html, body, #root {
 }
 
 /* Mobile Screens (Vertical) */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .loader-title { font-size: 2rem; }
   .loader-subtitle { font-size: 0.85rem; letter-spacing: 1px; }
   
-  /* Top Bar Overlap Fix */
+  /* Header Mobile */
   .back-button { 
     top: max(16px, env(safe-area-inset-top)); 
     left: max(16px, env(safe-area-inset-left)); 
     padding: 10px 14px; 
     font-size: 0.8rem; 
+    height: 44px;
   }
   .sound-toggle { 
     top: max(16px, env(safe-area-inset-top)); 
     right: max(16px, env(safe-area-inset-right)); 
-    width: 38px; 
-    height: 38px; 
+    width: 44px; 
+    height: 44px; 
     font-size: 0.95rem; 
   }
-  .zone-title { 
-    top: max(65px, calc(env(safe-area-inset-top) + 50px)); /* Push down to avoid buttons */
-    padding: 8px 20px; 
-  }
-  .zone-title h2 { font-size: 0.95rem; }
   
-  /* Bottom Bar */
+  /* Bottom Sheet (Zone Title) */
+  .zone-title { 
+    top: auto;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    left: max(16px, env(safe-area-inset-left));
+    right: max(16px, env(safe-area-inset-right));
+    transform: none;
+    width: auto;
+    padding: 14px 16px;
+    border-radius: 20px;
+    background: rgba(15, 23, 42, 0.85);
+  }
+  .zone-title h2 { font-size: 1.1rem; }
+  .zone-title span { font-size: 0.85rem; }
+  
+  /* View Toggle moved above Bottom Sheet */
   .view-toggle { 
-    bottom: max(20px, env(safe-area-inset-bottom)); 
-    width: 90%; /* Fill more space */
+    bottom: calc(max(20px, env(safe-area-inset-bottom)) + 80px); /* Above bottom sheet */
+    width: 90%; 
     justify-content: space-between;
   }
   .view-toggle button { 
@@ -806,6 +829,7 @@ html, body, #root {
     font-size: 0.75rem; 
     flex: 1; 
   }
+  
   .lobby-instructions { 
     bottom: max(20px, env(safe-area-inset-bottom)); 
     font-size: 0.75rem; 
@@ -814,13 +838,6 @@ html, body, #root {
     text-align: center;
   }
 
-  .tour-button {
-    bottom: max(90px, calc(env(safe-area-inset-bottom) + 90px)) !important; /* Force above everything */
-    left: max(16px, env(safe-area-inset-left)) !important; /* Force left */
-    padding: 10px 16px;
-    font-size: 0.85rem;
-  }
-  
   /* Modals (Info & Quiz) */
   .info-card { 
     width: 92vw; 
