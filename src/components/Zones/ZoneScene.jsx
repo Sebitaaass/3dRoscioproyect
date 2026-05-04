@@ -6,10 +6,9 @@ import ProceduralTerrain from '../Terrain/ProceduralTerrain';
 import DynamicWater from '../Terrain/DynamicWater';
 import Flora from '../Terrain/Flora';
 import LowPolyTown from '../Terrain/LowPolyTown';
-import TourController from './TourController';
 import { zones } from '../../data/zones';
 
-export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrigger, isTourActive, onTourEnd }) {
+export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrigger }) {
   const zone = zones[zoneId];
   if (!zone) return null;
 
@@ -21,13 +20,6 @@ export default function ZoneScene({ zoneId, viewMode, onHotspotClick, onQuizTrig
 
   return (
     <>
-      <TourController 
-        isActive={isTourActive} 
-        hotspots={zone.hotspots} 
-        onTourEnd={onTourEnd} 
-        onHotspotReached={onHotspotClick} 
-      />
-
       {/* === LOW POLY LIGHTING SETUP === */}
       
       {/* Sky hemisphere: bright daylight blue sky + warm ground bounce */}

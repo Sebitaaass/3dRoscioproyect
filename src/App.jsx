@@ -10,7 +10,6 @@ import ViewToggle from './components/UI/ViewToggle';
 import BackButton from './components/UI/BackButton';
 import SoundToggle from './components/UI/SoundToggle';
 import QuizPanel from './components/UI/QuizPanel';
-import TourButton from './components/UI/TourButton';
 import { zones } from './data/zones';
 
 export default function App() {
@@ -23,7 +22,6 @@ export default function App() {
   const [quizActive, setQuizActive] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [transitionZone, setTransitionZone] = useState(null);
-  const [isTourActive, setIsTourActive] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   const cameraControlsRef = useRef();
@@ -48,14 +46,12 @@ export default function App() {
       setCurrentZone(zoneId);
       setScene('zone');
       setTransitionZone(null);
-      setIsTourActive(false);
     }, 1200);
   }, []);
 
   const handleReturnToLobby = useCallback(() => {
     setTransitionZone(null);
     setScene('transitioning');
-    setIsTourActive(false);
 
     setTimeout(() => {
       setCurrentZone(null);
@@ -87,19 +83,6 @@ export default function App() {
 
   const handleCorrectAnswer = useCallback(() => {
     setQuizCompleted(true);
-  }, []);
-
-  const handleToggleTour = useCallback(() => {
-    setIsTourActive(prev => {
-      if (!prev) {
-        setActiveHotspot(null); // Close any open hotspots when starting tour
-      }
-      return !prev;
-    });
-  }, []);
-
-  const handleTourEnd = useCallback(() => {
-    setIsTourActive(false);
   }, []);
 
   const zone = currentZone ? zones[currentZone] : null;
@@ -166,8 +149,6 @@ export default function App() {
                 viewMode={viewMode}
                 onHotspotClick={handleHotspotClick}
                 onQuizTrigger={handleQuizTrigger}
-                isTourActive={isTourActive}
-                onTourEnd={handleTourEnd}
               />
             )}
           </Suspense>
@@ -184,7 +165,6 @@ export default function App() {
             autoRotateSpeed={0.2} // Much slower rotation for better control
             dampingFactor={0.05}
             enableDamping
-            enabled={!isTourActive}
             target={
               scene === 'lobby' 
                 ? (isMobile ? [-4.8, 0, -3] : [0, 0, 0])
@@ -254,13 +234,6 @@ export default function App() {
       <AnimatePresence>
         {scene === 'zone' && (
           <ViewToggle viewMode={viewMode} onToggle={handleToggleView} />
-        )}
-      </AnimatePresence>
-
-      {/* Tour Button */}
-      <AnimatePresence>
-        {scene === 'zone' && (
-          <TourButton isTourActive={isTourActive} onToggle={handleToggleTour} />
         )}
       </AnimatePresence>
 
